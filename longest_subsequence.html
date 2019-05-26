@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <!-- redux -->
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+
+    <title>Starter Template</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <p>Original Text: </p> <input type="text" id="originalText" value="ABCD">
+        <p>Edited Text: </p> <input type="text" id="editedText" value="ACBD">
+        <button id="getText">Get Difference</button>
+        <p>Difference: <span id="diff"></span></p>
+
+
+
+    </div>
+
+    <script>
+        const button = document.getElementById('getText').addEventListener('click', function () {
+            const originalText = document.getElementById("originalText").value;
+            const editedText = document.getElementById("editedText").value;
+
+            const result = LCS(originalText, editedText);
+            document.getElementById("diff").innerHTML = result;
+        });
+
+
+
+        function LCS(st1, st2) {
+            // const result = longest_common_squence_recursive(st1, st2, 0, 0);
+            let memo = [];
+            for (let i = 0; i < st1.length; i++) {
+                memo.push(new Array(st2.length));
+            }
+            const result = longest_common_squence_dynamic(st1, st2, 0, 0, memo);
+            return result;
+        }
+
+        // dynamic programming
+        function longest_common_squence_dynamic(st1, st2, id1, id2, memo) {
+            if (st1.length === id1 || st2.length === id2) { return ''; }
+            if (memo[id1][id2] != undefined) {
+                return memo[id1][id2];
+            }
+            if (st1[id1] === st2[id2]) {
+                memo[id1][id2] = st1[id1] + longest_common_squence_dynamic(st1, st2, id1 + 1, id2 + 1, memo);
+                return memo[id1][id2];
+            }
+            const result1 = longest_common_squence_dynamic(st1, st2, id1 + 1, id2, memo);
+            const result2 = longest_common_squence_dynamic(st1, st2, id1, id2 + 1, memo);
+            if (result1.length > result2.length) {
+                memo[id1][id2] = result1;
+                return result1;
+            }
+            memo[id1][id2] = result2;
+            return result2;
+        }
+
+        // recursive
+        function longest_common_squence_recursive(st1, st2, id1, id2) {
+            if (st1.length === id1 || st2.length === id2) { return ""; }
+            if (st1[id1] === st2[id2]) {
+                return st1[id1] + longest_common_squence_recursive(st1, st2, id1 + 1, id2 + 1);
+            }
+            const result1 = longest_common_squence_recursive(st1, st2, id1 + 1, id2);
+            const result2 = longest_common_squence_recursive(st1, st2, id1, id2 + 1);
+            if (result1.length > result2.length) {
+                return result1;
+            }
+            return result2;
+
+        }
+
+    </script>
+</body>
+
+</html>
